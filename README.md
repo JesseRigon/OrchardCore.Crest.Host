@@ -1,42 +1,30 @@
-# Blazing Orchard
+# Blazing Orchard Host
 
-Blazing Orchard is a modular application framework that turns your [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) project into a CMS-powered Blazor application by leveraging [Orchard Core](https://github.com/OrchardCMS/OrchardCore/blob/dev/README.md) as a decoupled backend/CMS server using its REST & GraphQL APIs.
+This repository is a minimal Orchard Core host for trying the Blazing Orchard module and themes. It intentionally keeps the host small: Orchard owns runtime setup, while Blazing Orchard lives in `modules/BlazingOrchard` as a Git submodule.
 
-![Orchard-driven Blazor](./docs/blazing-orchard.gif)
+Use this repo when you want a clean Orchard application with Blazing Orchard for testing the project.
 
-## Orchard Core
-With Orchard Core, you have a strong, fully customizable backend system straight out of the box that allows you to manage content, workflows, forms, users and more.
+## Setup
 
-## Blazing Orchard
-With Blazing Orchard, you build your SPA application as you normally would, but powered by a backend that provides your application with content such as pages, blog posts, site navigation and pretty much anything you want to be content-driven.
+Clone the repository with submodules, or initialize them after cloning:
 
-## Features
+```bash
+git submodule update --init --recursive
+```
 
-- [x] Navigate to content items managed from Orchard, rendered within Blazor
-- [x] Render shapes mapped to components
-- [x] Consume APIs from custom Orchard Core modules
-- [x] Menu component
-- [x] Shape placement / ordering / alternates
-- [ ] Search component
-- [ ] Shortcode support
-- [ ] Embed within an Orchard Core Theme and initialize the Blazor app without explicitly specifying the host URL
-- [ ] Offline mode (initialize Blazor using a JSON export of the site)
+Then run it like a normal Orchard Core application:
 
-### Parts
-- [x] HtmlBodyPart
-- [x] MarkdownPart
-- [x] LiquidPart
-- [ ] FlowPart
-- [ ] BagPart
-- [ ] ListPart
-- [ ] TaxonomyPart
+```bash
+dotnet restore
+dotnet run --project BlazingOrchard.Host.csproj
+```
 
-### Fields
-- [x] TextField
-- [x] MarkdownField
-- [ ] MediaField
-- [ ] TaxonomyField
+Open the URL printed by `dotnet run` and complete Orchard's setup screen.
 
-## Getting Started
+Then go to Admn/Themes url and select the Blazing Orchard Admin theme. 
 
-Coming soon.
+Automatically, or on page refresh, you should see the new Blazor Admin Shell with the new menu. Title bar hasn't been implemented. This is a proof of concept. 
+
+It will still load standard Orchard pages as iframes within the Blazor shell, though not all functionality has been looked at or tested. Again this is a proof of concept.
+
+Admin/Themes is currently the only full Blazor page in this project. I will be updating the referenced submodule on a semi regular basis, slowly converting the rest into Blazor. It's not ready for a nuget package yet.
