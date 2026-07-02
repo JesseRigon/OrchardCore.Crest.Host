@@ -23,8 +23,12 @@ Open the URL printed by `dotnet run` and complete Orchard's setup screen.
 
 Then go to Admn/Themes url and select the Blazing Orchard Admin theme. 
 
-Automatically, or on page refresh, you should see the new Blazor Admin Shell with the new menu. Title bar hasn't been implemented. This is a proof of concept. 
+Automatically, or on page refresh, you should see the new Blazor Admin Shell with the new menu. Title bar has been implemented badly. This is a proof of concept. 
 
 It will still load standard Orchard pages as iframes within the Blazor shell, though not all functionality has been looked at or tested. Again this is a proof of concept.
 
-Admin/Themes is currently the only full Blazor page in this project. I will be updating the referenced submodule on a semi regular basis, slowly converting the rest into Blazor. It's not ready for a nuget package yet.
+Listed pages below are the only full Blazor pages so far in this project. I will be updating the referenced submodule on a semi regular basis, slowly converting the rest into Blazor. It's not ready for a nuget package yet.
+
+Blazor Implemeted Pages:
+Admin/Themes
+Admin/AdminMenus
