@@ -27,9 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="modules/BlazingOrchard/Themes/BlazingOrchard.Admin/BlazingOrchard.Admin.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard/Themes/BlazingOrchard.Admin.Manifest/BlazingOrchard.Admin.Manifest.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard/Themes/BlazingOrchard.LegacyFrame/BlazingOrchard.LegacyFrame.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard/Themes/BlazingOrchard.Site/BlazingOrchard.Site.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/BlazingOrchard.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/Themes/BlazingOrchard.LegacyFrame/BlazingOrchard.LegacyFrame.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/BlazingOrchard.Components.csproj" />
   </ItemGroup>
 </Project>

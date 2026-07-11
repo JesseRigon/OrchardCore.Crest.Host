@@ -1,3 +1,3 @@
-[submodule "modules/BlazingOrchard"]
-	path = modules/BlazingOrchard
+[submodule "Blazing Orchard Server"]
+	path = modules/BlazingOrchard.OrchardCoreModule
 	url = https://github.com/jesse-forked/BlazingOrchard.OrchardCoreModule.git
