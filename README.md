@@ -1,34 +1,44 @@
 # Blazing Orchard Host
 
-This repository is a minimal Orchard Core host for trying the Blazing Orchard module and themes. It intentionally keeps the host small: Orchard owns runtime setup, while Blazing Orchard lives in `modules/BlazingOrchard.OrchardCoreModule` as a Git submodule.
+## Project overview
 
-Use this repo when you want a clean Orchard application with Blazing Orchard for testing the project.
+Blazing Orchard is a minimal Orchard Core host for testing the Blazing Orchard submodule at `modules/BlazingOrchard.OrchardCoreModule`. The current admin experience is a Blazor WebAssembly shell served by Orchard; Orchard remains the authority for tenants, users, permissions, content, features, settings, themes, and navigation.
 
-## Setup
+The main boundary is: `BlazingOrchard.Server` is the backend overlay on top of Orchard, containing Orchard integration, admin-shell serving, legacy-frame infrastructure, and Blazor-admin-specific JSON adapters; `BlazingOrchard.Components` contains the UI code for now, including shared Blazor components plus the Admin and Site theme projects. The theme projects may split into their own repositories/packages later, but currently stay under `BlazingOrchard.Components`.
 
-Clone the repository with submodules, or initialize them after cloning:
+For a full understanding of the system, start with these docs:
 
-```bash
-git submodule update --init --recursive
-```
+- [`modules/BlazingOrchard.OrchardCoreModule/README.md`](modules/BlazingOrchard.OrchardCoreModule/README.md) — overview of the multi-project module repository, package boundaries, runtime model, legacy frame system, and future module/component direction. It explains how `BlazingOrchard.Server` and `BlazingOrchard.Components` fit together while keeping Orchard as the system of record.
+- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md) — Orchard-side runtime details, API strategy, controller audit, and endpoint rules. It also documents that Blazing Orchard is currently WASM-based, not Hybrid/MAUI/server-rendered yet, with those models left as future possibilities.
+- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md) — Radzen-based component library and theme overview. It explains the shared components, the `BlazingOrchard.Admin` theme/WASM shell, the included `BlazingOrchard.Site` theme, and the current build-time module component convention.
 
-Then run it like a normal Orchard Core application:
+## Simple dev setup
+
+After cloning with submodules, start the host with normal .NET commands:
 
 ```bash
 dotnet restore
 dotnet run --project BlazingOrchard.Host.csproj
 ```
 
-Open the URL printed by `dotnet run` and complete Orchard's setup screen.
+Development config is checked in at `appsettings.Development.json`. It uses SQLite only, runs AutoSetup with the local `BlazingDev` recipe, creates the dev tenant/user, and listens on **port 5014** by default to avoid colliding with other local Orchard sites commonly using 5010. Generated tenant data is kept in Orchard's standard `App_Data/` folder.
 
-Then go to Admin/Themes and select the Blazing Orchard Admin theme.
+Default login:
 
-Automatically, or on page refresh, you should see the new Blazor Admin Shell with the new menu. Title bar has been implemented badly. This is a proof of concept. 
+- URL: `http://localhost:5014/Admin`
+- Username: `admin`
+- Password: `BlazingRules1!`
 
-It will still load standard Orchard pages as iframes within the Blazor shell, though not all functionality has been looked at or tested. Again this is a proof of concept.
+Reset generated data by stopping the app and deleting `App_Data/`.
 
-Listed pages below are the only full Blazor pages so far in this project. I will be updating the referenced submodule on a semi regular basis, slowly converting the rest into Blazor. It's not ready for a nuget package yet.
+## Validation
 
-Blazor Implemented Pages:
-Admin/Themes
-Admin/AdminMenus
+With the dev server running:
+
+```bash
+node tests/playwright/dev-setup-admin.js
+```
+
+The Playwright test also defaults to `http://127.0.0.1:5014`; override with `BASE_URL` if needed.
+
+The bundled setup recipe enables the Blazing Orchard Admin theme for the Blazor admin shell.

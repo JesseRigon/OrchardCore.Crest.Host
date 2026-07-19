@@ -1,0 +1,67 @@
+{
+  "name": "BlazingDev",
+  "displayName": "Blazing Orchard Dev",
+  "description": "Minimal SQLite development setup for Blazing Orchard.",
+  "author": "Blazing Orchard",
+  "website": "https://github.com/jesse-forked/BlazingOrchard.OrchardCoreModule",
+  "version": "1.0.0",
+  "issetuprecipe": true,
+  "categories": [ "default" ],
+  "tags": [ "dev", "blazing", "sqlite" ],
+  "steps": [
+    {
+      "name": "feature",
+      "enable": [
+        "OrchardCore.Admin",
+        "OrchardCore.AdminMenu",
+        "OrchardCore.ContentTypes",
+        "OrchardCore.Contents",
+        "OrchardCore.Deployment",
+        "OrchardCore.Diagnostics",
+        "OrchardCore.Features",
+        "OrchardCore.Layers",
+        "OrchardCore.Liquid",
+        "OrchardCore.Media",
+        "OrchardCore.Navigation",
+        "OrchardCore.Recipes",
+        "OrchardCore.Roles",
+        "OrchardCore.Settings",
+        "OrchardCore.Shortcodes",
+        "OrchardCore.Templates",
+        "OrchardCore.Themes",
+        "OrchardCore.Users",
+        "OrchardCore.Widgets",
+        "Blazing",
+        "BlazingOrchard.Admin",
+        "BlazingOrchard.Site",
+        "TheAdmin",
+        "SafeMode"
+      ]
+    },
+    {
+      "name": "themes",
+      "admin": "BlazingOrchard.Admin",
+      "site": "BlazingOrchard.Site"
+    },
+    {
+      "name": "settings",
+      "SiteName": "Blazing Orchard Dev",
+      "CurrentAdminThemeName": "BlazingOrchard.Admin"
+    },
+    {
+      "name": "Roles",
+      "Roles": [
+        {
+          "Name": "Editor",
+          "Description": "Can edit site content.",
+          "Permissions": [ "EditContent", "ViewContent" ]
+        },
+        {
+          "Name": "Author",
+          "Description": "Can author site content.",
+          "Permissions": [ "EditOwnContent", "ViewContent" ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "BlazingOrchard.Host": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5014",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
