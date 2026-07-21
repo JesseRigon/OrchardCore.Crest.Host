@@ -7,5 +7,7 @@ obj/
 *.suo
 *.log
 App_Data/
+App_Data.backup-*/
+App_Data.mismatched-*/
 Localization/
 wwwroot/.well-known/acme-challenge/

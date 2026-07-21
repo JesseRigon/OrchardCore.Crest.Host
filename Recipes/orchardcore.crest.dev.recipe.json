@@ -1,13 +1,13 @@
 {
-  "name": "BlazingDev",
-  "displayName": "Blazing Orchard Dev",
-  "description": "Minimal SQLite development setup for Blazing Orchard.",
-  "author": "Blazing Orchard",
-  "website": "https://github.com/jesse-forked/BlazingOrchard.OrchardCoreModule",
+  "name": "OrchardCore.CrestDev",
+  "displayName": "Orchard Crest UI Framework Dev",
+  "description": "Minimal SQLite development setup for Orchard Crest UI Framework.",
+  "author": "Orchard Crest UI Framework",
+  "website": "https://github.com/jesse-forked/OrchardCore.Crest",
   "version": "1.0.0",
   "issetuprecipe": true,
   "categories": [ "default" ],
-  "tags": [ "dev", "blazing", "sqlite" ],
+  "tags": [ "dev", "crest", "sqlite" ],
   "steps": [
     {
       "name": "feature",
@@ -31,22 +31,22 @@
         "OrchardCore.Themes",
         "OrchardCore.Users",
         "OrchardCore.Widgets",
-        "Blazing",
-        "BlazingOrchard.Admin",
-        "BlazingOrchard.Site",
+        "OrchardCore.Crest",
+        "OrchardCore.Crest.Admin",
+        "OrchardCore.Crest.Site",
         "TheAdmin",
         "SafeMode"
       ]
     },
     {
       "name": "themes",
-      "admin": "BlazingOrchard.Admin",
-      "site": "BlazingOrchard.Site"
+      "admin": "OrchardCore.Crest.Admin",
+      "site": "OrchardCore.Crest.Site"
     },
     {
       "name": "settings",
-      "SiteName": "Blazing Orchard Dev",
-      "CurrentAdminThemeName": "BlazingOrchard.Admin"
+      "SiteName": "Orchard Crest UI Framework Dev",
+      "CurrentAdminThemeName": "OrchardCore.Crest.Admin"
     },
     {
       "name": "Roles",

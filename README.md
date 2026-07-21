@@ -1,16 +1,16 @@
-# Blazing Orchard Host
+# Orchard Crest UI Framework Host
 
 ## Project overview
 
-Blazing Orchard is a minimal Orchard Core host for testing the Blazing Orchard submodule at `modules/BlazingOrchard.OrchardCoreModule`. The current admin experience is a Blazor WebAssembly shell served by Orchard; Orchard remains the authority for tenants, users, permissions, content, features, settings, themes, and navigation.
+Orchard Crest UI Framework is a minimal Orchard Core host for testing the Orchard Crest UI Framework submodule at `modules/OrchardCore.Crest`. The current admin experience is a Blazor WebAssembly shell served by Orchard; Orchard remains the authority for tenants, users, permissions, content, features, settings, themes, and navigation.
 
-The main boundary is: `BlazingOrchard.Server` is the backend overlay on top of Orchard, containing Orchard integration, admin-shell serving, legacy-frame infrastructure, and Blazor-admin-specific JSON adapters; `BlazingOrchard.Components` contains shared Radzen-backed UI primitives; feature UI and assets live with their owning modules, such as `BlazingOrchard.Icons`; `BlazingOrchard.Admin` and `BlazingOrchard.Site` are root-level theme composition projects.
+The main boundary is: `OrchardCore.Crest.Server` is the backend overlay on top of Orchard, containing Orchard integration, admin-shell serving, legacy-frame infrastructure, and Blazor-admin-specific JSON adapters; `OrchardCore.Crest.Components` contains shared Radzen-backed UI primitives; feature UI and assets live with their owning modules, such as `OrchardCore.Crest.Icons`; `OrchardCore.Crest.Admin` and `OrchardCore.Crest.Site` are root-level theme composition projects.
 
 For a full understanding of the system, start with these docs:
 
-- [`modules/BlazingOrchard.OrchardCoreModule/README.md`](modules/BlazingOrchard.OrchardCoreModule/README.md) — overview of the multi-project module repository, package boundaries, runtime model, legacy frame system, and future module/component direction. It explains how `BlazingOrchard.Server` and `BlazingOrchard.Components` fit together while keeping Orchard as the system of record.
-- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md) — Orchard-side runtime details, API strategy, controller audit, and endpoint rules. It also documents that Blazing Orchard is currently WASM-based, not Hybrid/MAUI/server-rendered yet, with those models left as future possibilities.
-- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md) — Radzen-based shared component library and ownership boundary notes for feature modules and theme composition projects.
+- [`modules/OrchardCore.Crest/README.md`](modules/OrchardCore.Crest/README.md) — overview of the multi-project module repository, package boundaries, runtime model, legacy frame system, and future module/component direction. It explains how `OrchardCore.Crest.Server` and `OrchardCore.Crest.Components` fit together while keeping Orchard as the system of record.
+- [`modules/OrchardCore.Crest/OrchardCore.Crest.Server/README.md`](modules/OrchardCore.Crest/OrchardCore.Crest.Server/README.md) — Orchard-side runtime details, API strategy, controller audit, and endpoint rules. It also documents that Orchard Crest UI Framework is currently WASM-based, not Hybrid/MAUI/server-rendered yet, with those models left as future possibilities.
+- [`modules/OrchardCore.Crest/OrchardCore.Crest.Components/README.md`](modules/OrchardCore.Crest/OrchardCore.Crest.Components/README.md) — Radzen-based shared component library and ownership boundary notes for feature modules and theme composition projects.
 
 ## Simple dev setup
 
@@ -18,16 +18,20 @@ After cloning with submodules, start the host with normal .NET commands:
 
 ```bash
 dotnet restore
-dotnet run --project BlazingOrchard.Host.csproj
+dotnet run --project OrchardCore.Crest.Host.csproj
 ```
 
-Development config is checked in at `appsettings.Development.json`. It uses SQLite only, runs AutoSetup with the local `BlazingDev` recipe, creates the dev tenant/user, and listens on **port 5014** by default to avoid colliding with other local Orchard sites commonly using 5010. Generated tenant data is kept in Orchard's standard `App_Data/` folder.
+Development config is checked in at `appsettings.Development.json`. It uses SQLite only, runs AutoSetup with the local `OrchardCore.CrestDev` recipe when that recipe is available, creates the dev tenant/user, and listens on **port 5014** by default to avoid colliding with other local Orchard sites commonly using 5010. Generated tenant data is kept in Orchard's standard `App_Data/` folder and is ignored by git.
+
+The AutoSetup recipe is a development convenience, not a runtime requirement. If the `Recipes/` AutoSetup file is removed for a production-style deployment, `dotnet run` still starts without enabling `OrchardCore.AutoSetup`; existing tenant data in `App_Data/` is used normally, and new tenants/users can be created through Orchard's manual setup flow and then the recipe can be run from within the app if desired. For this test repo, if credentials or tenant state drift, stop the app and delete `App_Data/` to force a clean AutoSetup run. For production systems, treat `App_Data/` as tenant data: do not delete it unless intentionally wiping/resetting the site, and back it up first.
 
 Default login:
 
-- URL: `http://localhost:5014/Admin`
+- URL: `http://crest.localhost:5014/Admin`
 - Username: `admin`
-- Password: `BlazingRules1!`
+- Password: `CrestRules1!`
+
+Use `crest.localhost` instead of `localhost`/`127.0.0.1` when running beside another Orchard app. Browser cookies are scoped by hostname, not port, so separate local hostnames prevent the Orchard auth cookies from replacing each other. If your environment does not resolve the local names, run `/workspaces/fruitful.orchard/dev/local-hostnames.sh` once or add `127.0.0.1 crest.localhost` to your hosts file.
 
 Reset generated data by stopping the app and deleting `App_Data/`.
 
@@ -39,6 +43,6 @@ With the dev server running:
 node tests/playwright/dev-setup-admin.js
 ```
 
-The Playwright test also defaults to `http://127.0.0.1:5014`; override with `BASE_URL` if needed.
+The Playwright test also defaults to `http://crest.localhost:5014`; override with `BASE_URL` if needed.
 
-The bundled setup recipe enables the Blazing Orchard Admin theme for the Blazor admin shell.
+The bundled setup recipe enables the Orchard Crest UI Framework Admin theme for the Blazor admin shell.

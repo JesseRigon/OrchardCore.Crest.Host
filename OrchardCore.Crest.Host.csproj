@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <UserSecretsId>blazing-orchard-host</UserSecretsId>
+    <UserSecretsId>orchard-crest-host</UserSecretsId>
   </PropertyGroup>
 
   <Target Name="EnsureWwwRootExists" BeforeTargets="Build;Publish">
@@ -31,11 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/BlazingOrchard.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/Themes/BlazingOrchard.LegacyFrame/BlazingOrchard.LegacyFrame.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/BlazingOrchard.Components.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Icons/BlazingOrchard.Icons.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Admin/BlazingOrchard.Admin.csproj" />
-    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Site/BlazingOrchard.Site.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Server/OrchardCore.Crest.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Server/Themes/OrchardCore.Crest.LegacyFrame/OrchardCore.Crest.LegacyFrame.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Components/OrchardCore.Crest.Components.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Icons/OrchardCore.Crest.Icons.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Admin/OrchardCore.Crest.Admin.csproj" />
+    <ProjectReference Include="modules/OrchardCore.Crest/OrchardCore.Crest.Site/OrchardCore.Crest.Site.csproj" />
   </ItemGroup>
 </Project>

@@ -1,14 +1,14 @@
 const { chromium } = require('playwright');
 
-const baseUrl = process.env.BASE_URL || 'http://127.0.0.1:5014';
+const baseUrl = process.env.BASE_URL || 'http://crest.localhost:5014';
 const headed = process.env.HEADED === '1';
 
 const tenants = [
-  { name: 'Default', prefix: '', username: 'admin', password: 'BlazingRules1!' }
+  { name: 'Default', prefix: '', username: 'admin', password: 'CrestRules1!' }
 ];
 
 async function login(context, tenant) {
-  const response = await context.request.post(`${baseUrl}${tenant.prefix}/api/blazing/auth/login`, {
+  const response = await context.request.post(`${baseUrl}${tenant.prefix}/api/crest/auth/login`, {
     data: { userName: tenant.username, password: tenant.password, rememberMe: false }
   });
 
@@ -54,7 +54,7 @@ async function validateTenant(browser, tenant) {
   console.log(JSON.stringify({ tenant: tenant.name, ...result }, null, 2));
 
   if (!result.hasShell || !result.hasSidebar) {
-    throw new Error(`Expected Blazing admin shell and sidebar for ${tenant.name}.`);
+    throw new Error(`Expected Crest admin shell and sidebar for ${tenant.name}.`);
   }
 
   await context.close();
