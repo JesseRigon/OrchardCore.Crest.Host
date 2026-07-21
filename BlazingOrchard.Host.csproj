@@ -34,5 +34,8 @@
     <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/BlazingOrchard.csproj" />
     <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/Themes/BlazingOrchard.LegacyFrame/BlazingOrchard.LegacyFrame.csproj" />
     <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/BlazingOrchard.Components.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Icons/BlazingOrchard.Icons.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Admin/BlazingOrchard.Admin.csproj" />
+    <ProjectReference Include="modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Site/BlazingOrchard.Site.csproj" />
   </ItemGroup>
 </Project>

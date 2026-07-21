@@ -4,13 +4,13 @@
 
 Blazing Orchard is a minimal Orchard Core host for testing the Blazing Orchard submodule at `modules/BlazingOrchard.OrchardCoreModule`. The current admin experience is a Blazor WebAssembly shell served by Orchard; Orchard remains the authority for tenants, users, permissions, content, features, settings, themes, and navigation.
 
-The main boundary is: `BlazingOrchard.Server` is the backend overlay on top of Orchard, containing Orchard integration, admin-shell serving, legacy-frame infrastructure, and Blazor-admin-specific JSON adapters; `BlazingOrchard.Components` contains the UI code for now, including shared Blazor components plus the Admin and Site theme projects. The theme projects may split into their own repositories/packages later, but currently stay under `BlazingOrchard.Components`.
+The main boundary is: `BlazingOrchard.Server` is the backend overlay on top of Orchard, containing Orchard integration, admin-shell serving, legacy-frame infrastructure, and Blazor-admin-specific JSON adapters; `BlazingOrchard.Components` contains shared Radzen-backed UI primitives; feature UI and assets live with their owning modules, such as `BlazingOrchard.Icons`; `BlazingOrchard.Admin` and `BlazingOrchard.Site` are root-level theme composition projects.
 
 For a full understanding of the system, start with these docs:
 
 - [`modules/BlazingOrchard.OrchardCoreModule/README.md`](modules/BlazingOrchard.OrchardCoreModule/README.md) — overview of the multi-project module repository, package boundaries, runtime model, legacy frame system, and future module/component direction. It explains how `BlazingOrchard.Server` and `BlazingOrchard.Components` fit together while keeping Orchard as the system of record.
 - [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Server/README.md) — Orchard-side runtime details, API strategy, controller audit, and endpoint rules. It also documents that Blazing Orchard is currently WASM-based, not Hybrid/MAUI/server-rendered yet, with those models left as future possibilities.
-- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md) — Radzen-based component library and theme overview. It explains the shared components, the `BlazingOrchard.Admin` theme/WASM shell, the included `BlazingOrchard.Site` theme, and the current build-time module component convention.
+- [`modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md`](modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/README.md) — Radzen-based shared component library and ownership boundary notes for feature modules and theme composition projects.
 
 ## Simple dev setup
 

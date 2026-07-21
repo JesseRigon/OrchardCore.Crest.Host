@@ -63,7 +63,7 @@ blazing-orchard/
 - [ ] Decide whether the current admin WASM `DisplayManagement` code should be split into:
   - neutral display/rendering orchestration, and
   - admin-shell state/session/theme services.
-- [ ] Move neutral display concepts out of `modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Components/Themes/BlazingOrchard.Admin/wasm/DisplayManagement`.
+- [ ] Move neutral display concepts out of `modules/BlazingOrchard.OrchardCoreModule/BlazingOrchard.Admin/wasm/DisplayManagement`.
 - [ ] Keep Radzen renderers in `BlazingOrchard.Components`, not in the neutral display package.
 - [ ] Expand concrete Radzen field renderers in `BlazingOrchard.Components/Components/Model` or a dedicated `Components/Display` area as needed.
 

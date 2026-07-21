@@ -11,11 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.LegacyFrame"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Components", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Components\BlazingOrchard.Components.csproj", "{ADA78542-C46A-4EEB-9D60-F37A9853E5F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Admin", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Components\Themes\BlazingOrchard.Admin\BlazingOrchard.Admin.csproj", "{7E974E82-1C7F-4027-B62A-334D8C3FF782}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Admin", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Admin\BlazingOrchard.Admin.csproj", "{7E974E82-1C7F-4027-B62A-334D8C3FF782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Site", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Components\Themes\BlazingOrchard.Site\BlazingOrchard.Site.csproj", "{C9455B7A-F2FB-44E9-B811-0218F23B1540}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Site", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Site\BlazingOrchard.Site.csproj", "{C9455B7A-F2FB-44E9-B811-0218F23B1540}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Admin.Wasm", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Components\Themes\BlazingOrchard.Admin\wasm\BlazingOrchard.Admin.Wasm.csproj", "{869A14ED-0BBB-419C-98A7-6AB0C987F650}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Admin.Wasm", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Admin\wasm\BlazingOrchard.Admin.Wasm.csproj", "{869A14ED-0BBB-419C-98A7-6AB0C987F650}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingOrchard.Icons", "modules\BlazingOrchard.OrchardCoreModule\BlazingOrchard.Icons\BlazingOrchard.Icons.csproj", "{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,18 @@ Global
 		{869A14ED-0BBB-419C-98A7-6AB0C987F650}.Release|x64.Build.0 = Release|Any CPU
 		{869A14ED-0BBB-419C-98A7-6AB0C987F650}.Release|x86.ActiveCfg = Release|Any CPU
 		{869A14ED-0BBB-419C-98A7-6AB0C987F650}.Release|x86.Build.0 = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|x64.Build.0 = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|x64.Build.0 = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F92346E-4EB8-4C6B-B653-CDA28AC34AAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
