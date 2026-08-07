@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Crest;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,21 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, logger) =>
 {
     logger.ReadFrom.Configuration(context.Configuration);
-});
-
-builder.Services.PostConfigure<BlazorAdminThemeOptions>(options =>
-{
-    options.BlazorRouteSourceDirectories = [];
-    options.BlazorRoutes = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "/admin",
-        "/admin/adminmenu",
-        "/admin/adminmenu/list",
-        "/admin/adminmenus",
-        "/admin/designsystem",
-        "/admin/themes",
-        "/login",
-    };
 });
 
 var setupFeatures = new List<string>
