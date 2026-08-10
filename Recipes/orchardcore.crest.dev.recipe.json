@@ -8,6 +8,9 @@
   "issetuprecipe": true,
   "categories": [ "default" ],
   "tags": [ "dev", "crest", "sqlite" ],
+  "variables": {
+    "blazorCounterContentItemId": "4c1b6c1f8f5b4a2f9c2d7e8a1b3f5c6d"
+  },
   "steps": [
     {
       "name": "feature",
@@ -47,6 +50,26 @@
       "name": "settings",
       "SiteName": "Orchard Crest UI Framework Dev",
       "CurrentAdminThemeName": "OrchardCore.Crest.Admin"
+    },
+    {
+      "name": "content",
+      "Data": [
+        {
+          "ContentItemId": "[js: variables('blazorCounterContentItemId')]",
+          "ContentType": "BlazorComponent",
+          "DisplayText": "Blazor Counter (interactive-island test)",
+          "Latest": true,
+          "Published": true,
+          "Owner": "[js: parameters('AdminUsername')]",
+          "Author": "[js: parameters('AdminUsername')]",
+          "CrestBlazorComponentPart": {
+            "ComponentName": "CrestCounter",
+            "Parameters": {
+              "StartValue": "5"
+            }
+          }
+        }
+      ]
     },
     {
       "name": "Roles",

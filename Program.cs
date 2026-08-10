@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,22 +9,27 @@ builder.Host.UseSerilog((context, logger) =>
     logger.ReadFrom.Configuration(context.Configuration);
 });
 
-var setupFeatures = new List<string>
-{
-    "OrchardCore.Crest",
-    "OrchardCore.Crest.Admin",
-    "OrchardCore.Crest.Site",
-};
+var setupFeatures = new List<string>();
 
 if (IsAutoSetupRecipeAvailable(builder))
 {
-    setupFeatures.Insert(0, "OrchardCore.AutoSetup");
+    setupFeatures.Add("OrchardCore.AutoSetup");
 }
 else
 {
     Console.WriteLine("AutoSetup recipe is not available; OrchardCore.AutoSetup will not be enabled. Existing tenants can run normally, and new tenants can be set up manually.");
 }
 
+// Crest's own features are enabled by the setup recipe's own "feature" step (see
+// Recipes/orchardcore.crest.dev.recipe.json) once the tenant is provisioned, not here.
+// AddSetupFeatures loads its features into the Uninitialized/setup shell descriptor
+// itself - OrchardCore.Crest transitively depends on OrchardCore.Contents (via
+// OrchardCore.Menu), which registers a DB-backed IPermissionProvider
+// (ContentTypePermissions). OrchardCoreBuilderExtensions.ValidatePermissionsAsync
+// unconditionally calls GetPermissionsAsync() on every registered IPermissionProvider
+// during shell pipeline construction, including for Uninitialized shells - but an
+// Uninitialized shell has no IStore/ISession yet (OrchardCore.Data.YesSql returns null
+// for both until after setup), so this NRE's on every request before setup can even run.
 builder.Services
     .AddOrchardCms()
     .AddSetupFeatures([.. setupFeatures]);
@@ -33,6 +39,34 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
+}
+
+// blazor.web.js (needed by any @rendermode interactive island, e.g. OrchardCore.Crest's
+// Components/Pages/BlazorCounter.razor) ships via the microsoft.aspnetcore.app.internal.assets
+// SDK package's own static-web-assets target, but that target only fires when
+// OutputType=Exe AND UsingMicrosoftNETSdkWeb=true - neither is true for
+// OrchardCore.Crest.csproj, a Sdk="Microsoft.NET.Sdk.Razor" module library (Orchard's
+// module convention), so the file never reaches this app's static web assets manifest
+// and 404s. Forcing OutputType=Exe on a module library risked breaking
+// OrchardCore.Module.Targets' embedded-resource assumptions, so instead: serve it
+// directly from the same physical file the SDK target would have picked up, scoped to
+// exactly this one path.
+var frameworkAssetsRoot = Directory
+    .EnumerateDirectories(Path.Combine(
+        Environment.GetEnvironmentVariable("NUGET_PACKAGES")
+            ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages"),
+        "microsoft.aspnetcore.app.internal.assets"))
+    .OrderByDescending(path => path)
+    .Select(path => Path.Combine(path, "_framework"))
+    .FirstOrDefault(Directory.Exists);
+
+if (frameworkAssetsRoot is not null)
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(frameworkAssetsRoot),
+        RequestPath = "/_framework",
+    });
 }
 
 app.UseStaticFiles();
