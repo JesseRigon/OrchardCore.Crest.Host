@@ -3,6 +3,7 @@ obj/
 .nuget/
 .vs/
 .vscode/
+node_modules/
 *.user
 *.suo
 *.log
