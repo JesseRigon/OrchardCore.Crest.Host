@@ -6,6 +6,12 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 DEV_DIR="${SCRIPT_DIR}"
 SERVER_PROJECT="${ROOT_DIR}/OrchardCore.Crest.Host.csproj"
 
+# The devcontainer's default LANG=C.UTF-8 has no named .NET culture, so
+# CultureInfo.InstalledUICulture resolves to "" (invariant) - requests then throw
+# ArgumentException("cultureName") in the localization pipeline. Pin LANG so local
+# dev always has a real installed culture (same fix as fruitful.orchard/dev/dev.sh).
+export LANG="${LANG_OVERRIDE:-en_US.UTF-8}"
+
 export CREST_SERVER_URL="${CREST_SERVER_URL:-http://crest.localhost:5014}"
 export CREST_SERVER_PORT="${CREST_SERVER_PORT:-5014}"
 # Playwright isn't installed locally in this repo; reuse fruitful.orchard's install
@@ -15,9 +21,14 @@ export NODE_PATH="${NODE_PATH:-/workspaces/fruitful.orchard/node_modules}"
 usage() {
   cat <<'EOF'
 Usage:
+  bash dev/dev.sh up        One command up: restore, then run the dev server in the foreground.
+  bash dev/dev.sh server    Alias for up.
   bash dev/dev.sh build     Rebuild OrchardCore.Crest.Host.csproj only (no server, no test run).
-  bash dev/dev.sh server    Run the dev server in the foreground (dotnet run, Development launch profile).
-  bash dev/dev.sh stop      Stop a locally running dev server.
+  bash dev/dev.sh stop      Stop a locally running dev server (processes only).
+  bash dev/dev.sh down      One command down: stop the server, shut down build servers,
+                            remove all bin/obj. App_Data (tenant state) survives - the
+                            next 'up' restores + rebuilds.
+  bash dev/dev.sh reset     down + delete App_Data tenant state. Next 'up' provisions fresh.
   bash dev/dev.sh test      Rebuild, start the dev server if it isn't already up, run every Playwright script in the repo.
 EOF
 }
@@ -34,15 +45,48 @@ url_is_up() {
   curl -fsS --max-time 2 -o /dev/null "$url" >/dev/null 2>&1
 }
 
+# drvfs (WSL bind mounts) sporadically refuses to update MSBuild's incremental
+# *.Up2Date markers written by an earlier process (MSB3374), failing otherwise-clean
+# builds. The markers only gate incremental up-to-date checks; deleting them is safe.
+clear_stale_build_markers() {
+  find "${ROOT_DIR}" \( -name node_modules -o -name .git \) -prune -o \
+    -type f -name '*.Up2Date' -print0 2>/dev/null | xargs -0 -r rm -f
+}
+
+remove_build_output() {
+  dotnet build-server shutdown >/dev/null 2>&1 || true
+  find "${ROOT_DIR}" \( -name node_modules -o -name .git \) -prune -o \
+    -type d \( -name bin -o -name obj \) -prune -print0 2>/dev/null | xargs -0 -r rm -rf
+}
+
 run_build() {
   require_dotnet
+  clear_stale_build_markers
   dotnet build "${SERVER_PROJECT}"
 }
 
 run_server() {
   require_dotnet
   cd "${ROOT_DIR}"
+  dotnet build-server shutdown || true
+  clear_stale_build_markers
+  dotnet restore "${SERVER_PROJECT}" --configfile "${ROOT_DIR}/NuGet.config"
   dotnet run --project "${SERVER_PROJECT}"
+}
+
+down() {
+  echo "Stopping the dev server..."
+  stop_server
+  echo "Shutting down build servers and removing bin/obj..."
+  remove_build_output
+  echo "Down. App_Data (tenant state) was preserved - 'reset' removes it too."
+}
+
+reset() {
+  down
+  echo "Deleting App_Data tenant state..."
+  rm -rf "${ROOT_DIR}/App_Data"
+  echo "Reset complete. Run 'bash dev/dev.sh up' to provision a fresh site."
 }
 
 stop_server() {
@@ -54,6 +98,8 @@ stop_server() {
 }
 
 start_server_background() {
+  clear_stale_build_markers
+  dotnet restore "${SERVER_PROJECT}" --configfile "${ROOT_DIR}/NuGet.config"
   mkdir -p "${DEV_DIR}/logs"
   (cd "${ROOT_DIR}" && nohup dotnet run --project "${SERVER_PROJECT}" > "${DEV_DIR}/logs/server.log" 2>&1 &)
 
@@ -156,16 +202,22 @@ run_tests() {
   return "${overall_failed}"
 }
 
-command="${1:-}"
+command="${1:-up}"
 case "${command}" in
   build)
     run_build
     ;;
-  server)
+  up|server)
     run_server
     ;;
   stop)
     stop_server
+    ;;
+  down)
+    down
+    ;;
+  reset)
+    reset
     ;;
   test)
     run_tests
