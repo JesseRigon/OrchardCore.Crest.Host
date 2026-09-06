@@ -6,10 +6,17 @@
   "website": "https://github.com/jesse-forked/OrchardCore.Crest",
   "version": "1.0.0",
   "issetuprecipe": true,
-  "categories": [ "default" ],
-  "tags": [ "dev", "crest", "sqlite" ],
+  "categories": [
+    "default"
+  ],
+  "tags": [
+    "dev",
+    "crest",
+    "sqlite"
+  ],
   "variables": {
-    "blazorCounterContentItemId": "4c1b6c1f8f5b4a2f9c2d7e8a1b3f5c6d"
+    "blazorCounterContentItemId": "4c1b6c1f8f5b4a2f9c2d7e8a1b3f5c6d",
+    "legacyFrameWorkflowTypeId": "4crestlegacyframeworkflowtype001"
   },
   "steps": [
     {
@@ -37,8 +44,13 @@
         "OrchardCore.Crest",
         "OrchardCore.Crest.Admin",
         "OrchardCore.Crest.Site",
+        "Crest.ContentPartLists",
         "TheAdmin",
-        "SafeMode"
+        "SafeMode",
+        "OrchardCore.Localization",
+        "OrchardCore.Workflows",
+        "OrchardCore.Crest.LegacyFrame",
+        "OrchardCore.Crest.Icons"
       ]
     },
     {
@@ -49,7 +61,31 @@
     {
       "name": "settings",
       "SiteName": "Orchard Crest UI Framework Dev",
-      "CurrentAdminThemeName": "OrchardCore.Crest.Admin"
+      "CurrentAdminThemeName": "OrchardCore.Crest.Admin",
+      "LocalizationSettings": {
+        "DefaultCulture": "en-US",
+        "SupportedCultures": [
+          "en-US",
+          "es-ES"
+        ],
+        "FallBackToParentCulture": true
+      }
+    },
+    {
+      "name": "WorkflowType",
+      "Data": [
+        {
+          "WorkflowTypeId": "[js: variables('legacyFrameWorkflowTypeId')]",
+          "Name": "Legacy frame smoke workflow",
+          "IsEnabled": true,
+          "IsSingleton": false,
+          "LockTimeout": 0,
+          "LockExpiration": 0,
+          "DeleteFinishedWorkflows": false,
+          "Activities": [],
+          "Transitions": []
+        }
+      ]
     },
     {
       "name": "content",
@@ -77,12 +113,18 @@
         {
           "Name": "Editor",
           "Description": "Can edit site content.",
-          "Permissions": [ "EditContent", "ViewContent" ]
+          "Permissions": [
+            "EditContent",
+            "ViewContent"
+          ]
         },
         {
           "Name": "Author",
           "Description": "Can author site content.",
-          "Permissions": [ "EditOwnContent", "ViewContent" ]
+          "Permissions": [
+            "EditOwnContent",
+            "ViewContent"
+          ]
         }
       ]
     }

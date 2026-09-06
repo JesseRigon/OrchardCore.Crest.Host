@@ -48,12 +48,15 @@ Reset generated data by stopping the app and deleting `App_Data/`.
 
 ## Validation
 
-With the dev server running:
+With the dev server running, run the shared Crest admin suite from the submodule:
 
 ```bash
-node tests/playwright/dev-setup-admin.js
+BASE_URL=http://crest.localhost:5014 ADMIN_PASSWORD='CrestRules1!' OUTPUT_ROOT="$PWD/tests/playwright/output" node modules/OrchardCore.Crest/tests/playwright/run-admin-suite.js
 ```
 
-The Playwright test also defaults to `http://crest.localhost:5014`; override with `BASE_URL` if needed.
+`OUTPUT_ROOT` keeps this host's screenshot baselines (committed under
+`tests/playwright/output/base/`) separate from the submodule's own output
+directory, whose baselines belong to other hosts. On a baseline change, rerun
+with `UPDATE_BASE=1` and review the diff before committing.
 
 The bundled setup recipe enables the Orchard Crest UI Framework Admin theme for the Blazor admin shell.
