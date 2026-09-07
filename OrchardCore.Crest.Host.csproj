@@ -13,10 +13,10 @@
   </Target>
 
   <ItemGroup>
-    <Compile Remove="modules\**;OrchardCore\**" />
-    <Content Remove="modules\**;OrchardCore\**" />
-    <EmbeddedResource Remove="modules\**;OrchardCore\**" />
-    <None Remove="modules\**;OrchardCore\**" />
+    <Compile Remove="modules\**" />
+    <Content Remove="modules\**" />
+    <EmbeddedResource Remove="modules\**" />
+    <None Remove="modules\**" />
   </ItemGroup>
 
   <ItemGroup>

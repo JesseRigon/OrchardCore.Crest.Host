@@ -12,6 +12,31 @@ For a full understanding of the system, start with these docs:
 - [`modules/OrchardCore.Crest/OrchardCore.Crest.Server/README.md`](modules/OrchardCore.Crest/OrchardCore.Crest.Server/README.md) — Orchard-side runtime details, API strategy, controller audit, and endpoint rules. It also documents that Orchard Crest UI Framework is currently WASM-based, not Hybrid/MAUI/server-rendered yet, with those models left as future possibilities.
 - [`modules/OrchardCore.Crest/OrchardCore.Crest.Components/README.md`](modules/OrchardCore.Crest/OrchardCore.Crest.Components/README.md) — Radzen-based shared component library and ownership boundary notes for feature modules and theme composition projects.
 
+## Custom OrchardCore requirement
+
+Crest currently requires a custom OrchardCore build: it depends on AdminNode
+`UniqueId` modifications pending upstream in
+[OrchardCMS/OrchardCore#19771](https://github.com/OrchardCMS/OrchardCore/pull/19771).
+Until that merges (if ever), the packages come from
+[`jesse-forked/OrchardCore`](https://github.com/jesse-forked/OrchardCore), branch
+**`Crest`**, which this repo carries as the `modules/OrchardCore` submodule. Crest
+pins every OrchardCore package to `3.0.2-local` — a version that exists only in a
+feed packed from that fork — and `NuGet.config` maps `OrchardCore*` to two local
+feed folders:
+
+- **Dev layout**: a prebuilt sibling feed at `/workspaces/local-nuget-feed`
+  (packed once from a sibling `/workspaces/OrchardCore` checkout). If it holds the
+  packages, nothing else happens.
+- **Standalone ("production mode") layout**: no sibling feed — `dev/dev.sh up`
+  (or `build`) automatically initializes the `modules/OrchardCore` submodule and
+  packs it into the in-repo `local-nuget-feed/` folder (gitignored). First run is
+  a full OrchardCore Release build, so it takes a while. `bash dev/dev.sh feed`
+  forces this pack even when a sibling feed exists.
+
+Only the HOST decides where OrchardCore comes from: the Crest submodule declares
+package ids and the `-local` version but no source, so a restore against stock
+nuget.org fails loudly instead of silently building against unpatched OrchardCore.
+
 ## Simple dev setup
 
 After cloning with submodules, one command up, one command down:

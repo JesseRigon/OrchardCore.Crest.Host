@@ -30,7 +30,56 @@ Usage:
                             next 'up' restores + rebuilds.
   bash dev/dev.sh reset     down + delete App_Data tenant state. Next 'up' provisions fresh.
   bash dev/dev.sh test      Rebuild, start the dev server if it isn't already up, run every Playwright script in the repo.
+  bash dev/dev.sh feed      Force-pack the OrchardCore fork (modules/OrchardCore) into the
+                            in-repo local-nuget-feed/, even when a sibling dev feed exists.
+                            'up'/'build' run this automatically when NO feed is found.
 EOF
+}
+
+# --- OrchardCore fork feed -----------------------------------------------------
+# Crest pins every OrchardCore package to 3.0.2-local, a version that only exists
+# in a feed packed from the custom fork (jesse-forked/OrchardCore, branch Crest -
+# the AdminNode UniqueId changes pending upstream in OrchardCMS/OrchardCore#19771).
+# Two layouts are supported, and NuGet.config maps OrchardCore* to BOTH sources:
+#   dev:        a prebuilt sibling feed at /workspaces/local-nuget-feed (packed once
+#               from a sibling /workspaces/OrchardCore checkout).
+#   standalone: no sibling feed - the fork is cloned as the modules/OrchardCore
+#               submodule and packed into the in-repo local-nuget-feed/ folder.
+OC_FEED_VERSION="3.0.2-local"
+SIBLING_FEED="/workspaces/local-nuget-feed"
+REPO_FEED="${ROOT_DIR}/local-nuget-feed"
+OC_SUBMODULE="${ROOT_DIR}/modules/OrchardCore"
+
+feed_has_packages() {
+  [ -f "$1/OrchardCore.Application.Cms.Targets.${OC_FEED_VERSION}.nupkg" ]
+}
+
+pack_orchardcore_feed() {
+  require_dotnet
+  echo "Packing the OrchardCore fork into ${REPO_FEED} (version ${OC_FEED_VERSION})..."
+  if [ ! -f "${OC_SUBMODULE}/OrchardCore.slnx" ]; then
+    echo "Cloning the OrchardCore fork submodule (modules/OrchardCore)..."
+    git -C "${ROOT_DIR}" submodule update --init modules/OrchardCore
+  fi
+  mkdir -p "${REPO_FEED}"
+  # OrchardCore's own repo-root NuGet.config governs this restore/pack. This is a
+  # full-solution Release pack and takes a long while on first run.
+  (cd "${OC_SUBMODULE}" && dotnet pack OrchardCore.slnx -c Release -p:Version="${OC_FEED_VERSION}" -o "${REPO_FEED}")
+  if ! feed_has_packages "${REPO_FEED}"; then
+    echo "Pack finished but ${REPO_FEED} is missing OrchardCore.Application.Cms.Targets.${OC_FEED_VERSION}.nupkg." >&2
+    exit 1
+  fi
+}
+
+ensure_orchardcore_feed() {
+  # NuGet.config declares both feed folders; restore fails if either path is absent.
+  mkdir -p "${SIBLING_FEED}" 2>/dev/null || true
+  mkdir -p "${REPO_FEED}"
+  if feed_has_packages "${SIBLING_FEED}" || feed_has_packages "${REPO_FEED}"; then
+    return 0
+  fi
+  echo "No OrchardCore ${OC_FEED_VERSION} feed found (sibling or in-repo) - bootstrapping from the fork."
+  pack_orchardcore_feed
 }
 
 require_dotnet() {
@@ -61,12 +110,14 @@ remove_build_output() {
 
 run_build() {
   require_dotnet
+  ensure_orchardcore_feed
   clear_stale_build_markers
   dotnet build "${SERVER_PROJECT}"
 }
 
 run_server() {
   require_dotnet
+  ensure_orchardcore_feed
   cd "${ROOT_DIR}"
   dotnet build-server shutdown || true
   clear_stale_build_markers
@@ -221,6 +272,9 @@ case "${command}" in
     ;;
   test)
     run_tests
+    ;;
+  feed)
+    pack_orchardcore_feed
     ;;
   -h|--help|help)
     usage

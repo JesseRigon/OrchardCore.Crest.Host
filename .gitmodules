@@ -2,6 +2,6 @@
 	path = modules/OrchardCore.Crest
 	url = https://github.com/JesseRigon/OrchardCore.Crest.git
 [submodule "OrchardCore"]
-	path = OrchardCore
+	path = modules/OrchardCore
 	url = https://github.com/jesse-forked/OrchardCore.git
 	branch = Crest
