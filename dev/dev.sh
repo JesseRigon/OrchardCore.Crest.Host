@@ -94,14 +94,6 @@ url_is_up() {
   curl -fsS --max-time 2 -o /dev/null "$url" >/dev/null 2>&1
 }
 
-# drvfs (WSL bind mounts) sporadically refuses to update MSBuild's incremental
-# *.Up2Date markers written by an earlier process (MSB3374), failing otherwise-clean
-# builds. The markers only gate incremental up-to-date checks; deleting them is safe.
-clear_stale_build_markers() {
-  find "${ROOT_DIR}" \( -name node_modules -o -name .git \) -prune -o \
-    -type f -name '*.Up2Date' -print0 2>/dev/null | xargs -0 -r rm -f
-}
-
 remove_build_output() {
   dotnet build-server shutdown >/dev/null 2>&1 || true
   find "${ROOT_DIR}" \( -name node_modules -o -name .git \) -prune -o \
@@ -111,18 +103,19 @@ remove_build_output() {
 run_build() {
   require_dotnet
   ensure_orchardcore_feed
-  clear_stale_build_markers
   dotnet build "${SERVER_PROJECT}"
 }
 
+# dotnet watch, not dotnet run: this host serves the Blazor WASM framework assets out
+# of the referenced projects' staticwebassets (Program.cs maps /_framework), and a bare
+# run never produces them on a rebuild.
 run_server() {
   require_dotnet
   ensure_orchardcore_feed
   cd "${ROOT_DIR}"
   dotnet build-server shutdown || true
-  clear_stale_build_markers
   dotnet restore "${SERVER_PROJECT}" --configfile "${ROOT_DIR}/NuGet.config"
-  dotnet run --project "${SERVER_PROJECT}"
+  dotnet watch --project "${SERVER_PROJECT}"
 }
 
 down() {
@@ -141,7 +134,9 @@ reset() {
 }
 
 stop_server() {
-  pkill -f "dotnet run --project .*OrchardCore.Crest.Host.csproj" >/dev/null 2>&1 || true
+  # dotnet watch supervises a child host process; kill the watcher first so it does not
+  # restart what the second pattern is about to kill.
+  pkill -f "dotnet watch --project .*OrchardCore.Crest.Host.csproj" >/dev/null 2>&1 || true
   pkill -f "${ROOT_DIR}/bin/.*/OrchardCore.Crest.Host$" >/dev/null 2>&1 || true
   if command -v lsof >/dev/null 2>&1; then
     lsof -ti :"${CREST_SERVER_PORT}" | xargs -r kill -9 >/dev/null 2>&1 || true
@@ -149,10 +144,9 @@ stop_server() {
 }
 
 start_server_background() {
-  clear_stale_build_markers
   dotnet restore "${SERVER_PROJECT}" --configfile "${ROOT_DIR}/NuGet.config"
   mkdir -p "${DEV_DIR}/logs"
-  (cd "${ROOT_DIR}" && nohup dotnet run --project "${SERVER_PROJECT}" > "${DEV_DIR}/logs/server.log" 2>&1 &)
+  (cd "${ROOT_DIR}" && nohup dotnet watch --project "${SERVER_PROJECT}" > "${DEV_DIR}/logs/server.log" 2>&1 &)
 
   echo "Waiting for ${CREST_SERVER_URL} to come up..."
   for _ in $(seq 1 60); do

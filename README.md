@@ -46,9 +46,9 @@ bash dev/dev.sh up      # restore + run the host in the foreground
 bash dev/dev.sh down    # stop the server, shut down build servers, remove all bin/obj
 ```
 
-`up` clears stale MSBuild incremental markers (a recurring drvfs/WSL failure
-mode) and restores before running, so a fresh clone or a post-`down` tree starts
-with the same single command. `down` leaves `App_Data/` (tenant state) alone;
+`up` restores before running and runs the host under `dotnet watch`, so a fresh
+clone or a post-`down` tree starts with the same single command and a rebuild
+regenerates the Blazor framework assets. `down` leaves `App_Data/` (tenant state) alone;
 `bash dev/dev.sh reset` also deletes it so the next `up` provisions a fresh site.
 Plain .NET commands still work if you prefer them:
 
